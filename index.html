@@ -73,6 +73,17 @@
   table.vocab td { padding: 8px 6px; border-bottom: 1px solid #243229; }
   table.vocab td:first-child { color: var(--texto); font-style: italic; }
   table.vocab td:last-child { color: var(--sec); }
+
+  /* ---- Gravador embutido ---- */
+  .gravador { background: var(--card); border-radius: 14px; padding: 18px; margin: 16px 0; text-align: center; }
+  .gravador-botao {
+    width: 64px; height: 64px; border-radius: 50%; border: none; margin: 0 auto 10px;
+    background: #c0392b; color: #fff; font-size: 24px; display: flex; align-items: center; justify-content: center;
+  }
+  .gravador-botao.gravando { background: #e74c3c; animation: pulsar 1.2s infinite; }
+  @keyframes pulsar { 0% { box-shadow: 0 0 0 0 rgba(231,76,60,0.5); } 70% { box-shadow: 0 0 0 14px rgba(231,76,60,0); } 100% { box-shadow: 0 0 0 0 rgba(231,76,60,0); } }
+  .gravador-status { font-size: 13px; color: var(--sec); margin-bottom: 4px; }
+  .gravador audio { width: 100%; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -151,7 +162,7 @@ const AULAS = {
     { html: `<h1>Frase 3 de 5</h1><div class="frase-grande">Tengo una reunión mañana por la tarde.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Tenho uma reunião amanhã à tarde.</div></div>` },
     { html: `<h1>Frase 4 de 5</h1><div class="frase-grande">Me gusta mi trabajo porque ayudo a las personas a invertir bien.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Gosto do meu trabalho porque ajudo as pessoas a investir bem.</div></div>` },
     { html: `<h1>Frase 5 de 5</h1><div class="frase-grande">Espero que usted tenga un buen día.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Espero que você tenha um bom dia.</div></div>` },
-    { html: `<h1>Agora sem ajuda</h1><p>Grave 2 minutos no celular, só em espanhol, sobre seu dia de hoje. Se cair no português no meio de uma frase — <b>pare e recomeça a frase inteira</b>.</p><ul class="lista-check"><li>Fale devagar, sem pressa</li><li>Pense a frase antes de falar</li><li>Se travar, recomeça a frase toda</li></ul>` },
+    { html: `<h1>Agora sem ajuda</h1><p>Grave aqui mesmo, só em espanhol, sobre seu dia de hoje. Se cair no português no meio de uma frase — <b>pare e recomeça a frase inteira</b>.</p><ul class="lista-check"><li>Fale devagar, sem pressa</li><li>Pense a frase antes de falar</li><li>Se travar, recomeça a frase toda</li></ul>${gravadorHtml('g1')}`, aoEntrar: () => iniciarGravador('g1') },
     { html: `<div class="emoji-grande">✅</div><h1>Aula 1 concluída</h1><p>Repita essa aula de novo amanhã, com frases novas sobre seu dia. Em 5-6 dias o gatilho começa a ficar automático.</p>` },
   ],
   m2a1: [
@@ -160,7 +171,7 @@ const AULAS = {
     { html: `<h1>Frase real 2</h1><div class="frase-grande">Una inmobiliaria especializada en inversiones en la costa de Santa Catarina, Brasil.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Uma imobiliária especializada em investimentos no litoral de Santa Catarina, Brasil.</div></div><p>Emende com a frase anterior, as duas juntas, sem pausa longa.</p>` },
     { html: `<h1>Vocabulário desta aula</h1><table class="vocab"><tr><td>valorización</td><td>valorização</td></tr><tr><td>alquiler</td><td>aluguel</td></tr><tr><td>ubicación</td><td>localização</td></tr><tr><td>inversión</td><td>investimento</td></tr></table><p>Fala cada palavra em voz alta, 2x.</p>` },
     { html: `<h1>Pergunta de qualificação real</h1><div class="frase-grande">¿Su interés en invertir en Brasil sería para generar ingresos por alquiler, aprovechar la valorización, o ambas cosas?<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Seu interesse seria gerar renda com aluguel, valorização, ou as duas coisas?</div></div>` },
-    { html: `<h1>Agora sem ajuda</h1><p>Grave 1 minuto se apresentando pra um lead imaginário, usando as frases que acabou de treinar — pode misturar com suas próprias palavras.</p>` },
+    { html: `<h1>Agora sem ajuda</h1><p>Grave se apresentando pra um lead imaginário, usando as frases que acabou de treinar — pode misturar com suas próprias palavras.</p>${gravadorHtml('g2')}`, aoEntrar: () => iniciarGravador('g2') },
     { html: `<div class="emoji-grande">✅</div><h1>Aula 2 concluída</h1><p>Você já treinou a apresentação real que seus leads recebem. Na próxima aula entramos em objeção de preço.</p>` },
   ],
 };
@@ -244,6 +255,60 @@ function renderPasso() {
   document.getElementById("btnAvancar").textContent =
     passoAtual === 0 ? "Começar" : passoAtual === passos.length - 1 ? "Terminar aula" : "Próximo";
   window.scrollTo(0,0);
+  if (p.aoEntrar) p.aoEntrar();
+}
+
+/* ===================== GRAVADOR EMBUTIDO ===================== */
+function gravadorHtml(id) {
+  return `
+    <div class="gravador" id="gravador-${id}">
+      <div class="gravador-status" id="status-${id}">Toque pra gravar</div>
+      <button class="gravador-botao" id="botao-${id}" onclick="alternarGravacao('${id}')">🎙️</button>
+      <audio id="audio-${id}" controls style="display:none;"></audio>
+    </div>`;
+}
+
+const gravadores = {}; // id -> { mediaRecorder, chunks, stream }
+
+function iniciarGravador(id) {
+  // Reseta o estado visual sempre que a tela é (re)aberta, mesmo que já tenha gravado antes.
+  gravadores[id] = gravadores[id] || {};
+}
+
+async function alternarGravacao(id) {
+  const botao = document.getElementById(`botao-${id}`);
+  const status = document.getElementById(`status-${id}`);
+  const audio = document.getElementById(`audio-${id}`);
+  const g = gravadores[id] || (gravadores[id] = {});
+
+  if (g.mediaRecorder && g.mediaRecorder.state === "recording") {
+    g.mediaRecorder.stop();
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    g.stream = stream;
+    g.chunks = [];
+    const mr = new MediaRecorder(stream);
+    g.mediaRecorder = mr;
+    mr.ondataavailable = (e) => g.chunks.push(e.data);
+    mr.onstop = () => {
+      const blob = new Blob(g.chunks, { type: "audio/webm" });
+      audio.src = URL.createObjectURL(blob);
+      audio.style.display = "block";
+      status.textContent = "Gravado! Toque pra ouvir, ou grave de novo.";
+      botao.classList.remove("gravando");
+      botao.textContent = "🎙️";
+      stream.getTracks().forEach((t) => t.stop());
+    };
+    mr.start();
+    botao.classList.add("gravando");
+    botao.textContent = "⏹️";
+    status.textContent = "Gravando... toque pra parar";
+  } catch (err) {
+    status.textContent = "Não consegui acessar o microfone — confira a permissão do navegador.";
+  }
 }
 
 function avancar() {
