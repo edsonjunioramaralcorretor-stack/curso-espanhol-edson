@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Español Terra Bonita</title>
+<style>
+  :root {
+    --verde: #1a7a4c;
+    --verde-escuro: #0f5233;
+    --fundo: #0e1512;
+    --card: #17221c;
+    --texto: #eef3ef;
+    --texto-sec: #9fb0a6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--fundo);
+    color: var(--texto);
+    padding-bottom: 80px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--verde), var(--verde-escuro));
+    padding: 24px 20px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; opacity: 0.85; font-size: 13px; }
+  .progress-wrap {
+    background: rgba(0,0,0,0.25);
+    border-radius: 20px;
+    height: 10px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    background: #fff;
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s;
+  }
+  nav {
+    display: flex;
+    overflow-x: auto;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--card);
+    position: sticky;
+    top: 92px;
+    z-index: 9;
+    -webkit-overflow-scrolling: touch;
+  }
+  nav button {
+    flex: 0 0 auto;
+    background: #22302a;
+    color: var(--texto-sec);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+  nav button.active {
+    background: var(--verde);
+    color: #fff;
+  }
+  main { padding: 16px; max-width: 640px; margin: 0 auto; }
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .card h2 { margin-top: 0; font-size: 17px; color: #fff; }
+  .card h3 { font-size: 14px; color: var(--verde); margin-bottom: 6px; }
+  .frase {
+    background: #0e1612;
+    border-left: 3px solid var(--verde);
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-style: italic;
+  }
+  .trad { font-size: 12px; color: var(--texto-sec); margin-top: 4px; font-style: normal; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  td, th { padding: 6px 8px; border-bottom: 1px solid #243229; text-align: left; }
+  th { color: var(--verde); }
+  .rotina-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #243229;
+  }
+  .rotina-item:last-child { border-bottom: none; }
+  .check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 2px solid var(--verde);
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .check.on { background: var(--verde); }
+  .rotina-texto b { display: block; font-size: 14px; }
+  .rotina-texto span { font-size: 12px; color: var(--texto-sec); }
+  .semana-tag {
+    display: inline-block;
+    background: var(--verde-escuro);
+    color: #cdeedb;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .record-btn {
+    width: 100%;
+    background: var(--verde);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  ul { padding-left: 18px; font-size: 14px; }
+  li { margin-bottom: 6px; }
+  .streak {
+    text-align: center;
+    font-size: 13px;
+    color: var(--texto-sec);
+    margin-top: 6px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🇪🇸 Español — Terra Bonita</h1>
+  <p>Reunião de investimento com confiança total, não fluência de turista.</p>
+  <div class="progress-wrap"><div class="progress-bar" id="barraGeral"></div></div>
+  <div class="streak" id="streakTexto">Comece hoje</div>
+</header>
+
+<nav id="nav"></nav>
+<main id="conteudo"></main>
+
+<script>
+const SEMANAS = [
+  {
+    id: "diagnostico",
+    titulo: "Diagnóstico",
+    tag: "Dia 0 — fazer antes de tudo",
+    conteudo: `
+      <div class="card">
+        <h2>Grave sua linha de base</h2>
+        <p>Fale 3 minutos em espanhol, sem preparar, respondendo:</p>
+        <ul>
+          <li>Conte como começou na Terra Bonita e por que trabalha com investidores hispanofalantes.</li>
+          <li>Explique por que vale investir no litoral de Santa Catarina.</li>
+          <li>Responda: "¿por qué debería invertir en Brasil y no en mi propio país?"</li>
+        </ul>
+        <button class="record-btn" onclick="alert('Use o gravador de voz nativo do celular e salve como diagnostico-semana-0')">📼 Como gravar</button>
+      </div>
+      <div class="card">
+        <h3>Depois de ouvir de volta, anote</h3>
+        <ul>
+          <li>Onde travou ou pausou procurando palavra</li>
+          <li>Onde misturou português</li>
+          <li>Se saiu mais "vos" ou "usted" sem querer</li>
+        </ul>
+        <p style="font-size:13px;color:var(--texto-sec)">Na Semana 8 você regrava e compara — essa é a prova real de progresso.</p>
+      </div>
+    `
+  },
+  {
+    id: "semana1",
+    titulo: "Semana 1",
+    tag: "Ajustada 25/10 — achado real do seu diagnóstico",
+    conteudo: `
+      <div class="card">
+        <h2>O que seu diagnóstico mostrou</h2>
+        <p>Você gravou os 3 minutos e saiu quase tudo em <b>português</b>, com só algumas palavras
+        em espanhol espalhadas ("bueno", quase "necesito") — e você mesmo se corrigiu no final.</p>
+        <p>Isso não é ruim, é um dado real: seu <b>entendimento</b> de espanhol (ouvir, ler) está
+        mais avançado que sua <b>produção ativa</b> (falar de improviso). É comum em quem teve
+        contato por convívio mas nunca treinou falar sob pressão — o cérebro entende, mas na hora
+        de falar sem pensar, volta pro português primeiro.</p>
+      </div>
+      <div class="card">
+        <h3>Foco desta semana: só o gatilho de trocar de idioma</h3>
+        <p>Esquece vocabulário de negócio por enquanto. O único objetivo agora é: <b>pensar a
+        frase inteira em espanhol ANTES de começar a falar</b>, nunca traduzir palavra por palavra
+        enquanto fala.</p>
+      </div>
+      <div class="card">
+        <h3>Exercício diário (10 min, além da rotina normal)</h3>
+        <p>Fale em voz alta, 10 frases curtas e completas sobre seu dia, 100% em espanhol — mesmo
+        que simples demais. Grave e ouça se escapou português no meio.</p>
+        <ul>
+          <li>Hoy me desperté a las... / Hoje acordei às...</li>
+          <li>Voy a trabajar en... / Vou trabalhar em...</li>
+          <li>Hablé con un cliente de... (país) / Falei com um cliente de...</li>
+          <li>Mañana tengo una reunión con... / Amanhã tenho uma reunião com...</li>
+          <li>Me gusta mi trabajo porque... / Gosto do meu trabalho porque...</li>
+        </ul>
+        <p style="font-size:13px;color:var(--texto-sec)">Use essas como ponto de partida, mas
+        troque pelo seu dia real — frase inventada não gruda, frase sua sim.</p>
+      </div>
+      <div class="card">
+        <h3>Regra da semana</h3>
+        <p>Se perceber que começou a pensar em português no meio da frase, <b>pare, respire,
+        recomece a frase inteira em espanhol</b> — não tente consertar só a palavra que faltou.
+        É assim que o gatilho se forma.</p>
+      </div>
+    `
+  },
+  {
+    id: "rotina",
+    titulo: "Rotina diária",
+    tag: "Repetir todo dia, 60-75 min",
+    conteudo: `
+      <div class="card">
+        <h2>Marque o que já fez hoje</h2>
+        <div id="rotinaLista"></div>
+      </div>
+    `
+  },
+  {
+    id: "vocabulario",
+    titulo: "Vocabulário real",
+    tag: "Direto dos textos aprovados da Terra Bonita",
+    conteudo: `
+      <div class="card">
+        <h3>Apresentação</h3>
+        <div class="frase">Soy Edson Junior, propietario de Terra Bonita Inversiones Inmobiliarias, una inmobiliaria especializada en inversiones en la costa de Santa Catarina, Brasil.
+          <div class="trad">Sou Edson Junior, proprietário da Terra Bonita Inversiones Inmobiliarias, imobiliária especializada em investimentos no litoral de SC.</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Pergunta de qualificação</h3>
+        <div class="frase">¿Su interés en invertir en Brasil sería para generar ingresos por alquiler, aprovechar la valorización de la propiedad o ambas cosas?
+          <div class="trad">Seu interesse seria gerar renda com aluguel, valorização, ou as duas coisas?</div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Objeção de preço (decorar a lógica, não a palavra por palavra)</h3>
+        <div class="frase">Claro, con mucho gusto puedo mostrarle los precios y las condiciones de pago. Pero me gustaría mostrarle algo más interesante... En una breve videollamada, comparto la pantalla de mi computadora para mostrarle la ubicación, el proyecto, los valores y las proyecciones de valorización de su inversión. ¿Tendría unos 15 minutos mañana por la mañana o por la tarde?</div>
+      </div>
+      <div class="card">
+        <h3>Tipos de imóvel / pagamento</h3>
+        <table>
+          <tr><th>Espanhol</th><th>Português</th></tr>
+          <tr><td>departamento terminado</td><td>apartamento pronto</td></tr>
+          <tr><td>en construcción</td><td>em construção</td></tr>
+          <tr><td>en preventa / en planta</td><td>na planta</td></tr>
+          <tr><td>pie</td><td>entrada</td></tr>
+          <tr><td>cuota(s)</td><td>parcela(s)</td></tr>
+          <tr><td>refuerzo</td><td>reforço de pagamento</td></tr>
+          <tr><td>valorización</td><td>valorização</td></tr>
+          <tr><td>alquiler</td><td>aluguel</td></tr>
+          <tr><td>ubicación</td><td>localização</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Convite pra reunião</h3>
+        <div class="frase">¿Tendría unos 15 minutos mañana por la mañana o por la tarde?</div>
+        <div class="frase">¿Le vendría bien conversar esta semana?</div>
+      </div>
+      <div class="card">
+        <h3>Se o lead pedir pra sair</h3>
+        <div class="frase">No va a recibir más mensajes míos por acá. Si algún día quiere retomar, solo escríbame.</div>
+      </div>
+    `
+  },
+  {
+    id: "usted",
+    titulo: '"Usted"',
+    tag: "O registro formal, rápido",
+    conteudo: `
+      <div class="card">
+        <h2>A troca mental mais simples</h2>
+        <p>"Usted" conjuga <b>igual a "él/ella"</b> — que você já domina. Só muda o pronome de objeto.</p>
+        <table>
+          <tr><th>Informal</th><th>Formal (usar na reunião)</th></tr>
+          <tr><td>vos tenés / tú tienes</td><td><b>usted tiene</b></td></tr>
+          <tr><td>vos podés / tú puedes</td><td><b>usted puede</b></td></tr>
+          <tr><td>¿cómo estás?</td><td><b>¿cómo está?</b></td></tr>
+          <tr><td>te muestro</td><td><b>le muestro</b></td></tr>
+          <tr><td>tu inversión</td><td><b>su inversión</b></td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Treino de 2 minutos</h3>
+        <p>Pegue 5 frases que você fala hoje em "vos" com um cliente e reescreva em "usted", em voz alta. Use frases SUAS de verdade.</p>
+      </div>
+    `
+  }
+];
+
+const ROTINA = [
+  { id: "r1", titulo: "Imersão ativa — 20 min", desc: "Podcast/vídeo de negócios em espanhol. 1ª sem legenda, 2ª com legenda em espanhol." },
+  { id: "r2", titulo: "Conversação real — 20 min", desc: "iTalki, Preply, HelloTalk ou Tandem. Todo dia, não só 2-3x." },
+  { id: "r3", titulo: "Correção ativa — 15 min", desc: "Grave 2-3 min falando, ouça, anote 2-3 erros que se repetem." },
+  { id: "r4", titulo: "Leitura em voz alta — 15 min", desc: "Notícia de economia/imóveis em espanhol, ou o vocabulário da aba acima." },
+];
+
+function hojeChave() {
+  const d = new Date();
+  return "espanol_" + d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+}
+
+function carregarEstado() {
+  const chave = hojeChave();
+  return JSON.parse(localStorage.getItem(chave) || "{}");
+}
+
+function salvarEstado(estado) {
+  localStorage.setItem(hojeChave(), JSON.stringify(estado));
+  atualizarBarra();
+}
+
+function toggleItem(id) {
+  const estado = carregarEstado();
+  estado[id] = !estado[id];
+  salvarEstado(estado);
+  renderRotina();
+}
+
+function renderRotina() {
+  const lista = document.getElementById("rotinaLista");
+  if (!lista) return;
+  const estado = carregarEstado();
+  lista.innerHTML = ROTINA.map(item => `
+    <div class="rotina-item" onclick="toggleItem('${item.id}')">
+      <div class="check ${estado[item.id] ? 'on' : ''}">${estado[item.id] ? '✓' : ''}</div>
+      <div class="rotina-texto">
+        <b>${item.titulo}</b>
+        <span>${item.desc}</span>
+      </div>
+    </div>
+  `).join("");
+}
+
+function atualizarBarra() {
+  const estado = carregarEstado();
+  const feitos = ROTINA.filter(i => estado[i.id]).length;
+  const pct = Math.round((feitos / ROTINA.length) * 100);
+  document.getElementById("barraGeral").style.width = pct + "%";
+  document.getElementById("streakTexto").textContent =
+    feitos === ROTINA.length ? "✅ Rotina de hoje completa!" : `${feitos}/${ROTINA.length} blocos feitos hoje`;
+}
+
+let abaAtual = "rotina";
+function mostrarAba(id) {
+  abaAtual = id;
+  const s = SEMANAS.find(x => x.id === id);
+  document.getElementById("conteudo").innerHTML = `<div class="semana-tag">${s.tag}</div>` + s.conteudo;
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.id === id));
+  if (id === "rotina") renderRotina();
+}
+
+document.getElementById("nav").innerHTML = SEMANAS.map(s =>
+  `<button data-id="${s.id}" onclick="mostrarAba('${s.id}')">${s.titulo}</button>`
+).join("");
+
+mostrarAba("rotina");
+atualizarBarra();
+</script>
+
+</body>
+</html>

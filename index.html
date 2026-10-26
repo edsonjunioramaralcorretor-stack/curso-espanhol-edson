@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Español para Reuniones — Terra Bonita</title>
+<style>
+  :root { --verde: #1a7a4c; --verde2: #28a866; --fundo: #0e1512; --card: #17221c; --texto: #eef3ef; --sec: #9fb0a6; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body {
+    margin: 0; font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    background: var(--fundo); color: var(--texto);
+    height: 100vh; display: flex; flex-direction: column; overflow: hidden;
+  }
+
+  /* ---- Tela de menu (home do curso) ---- */
+  #home { display: flex; flex-direction: column; height: 100%; overflow-y: auto; }
+  .home-header {
+    background: linear-gradient(135deg, var(--verde), #0f5233);
+    padding: 28px 20px 24px;
+  }
+  .home-header .kicker { font-size: 12px; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+  .home-header h1 { margin: 6px 0 4px; font-size: 22px; }
+  .home-header p { margin: 0; font-size: 13px; opacity: 0.85; }
+  .home-body { padding: 18px; flex: 1; }
+  .modulo-titulo { font-size: 13px; color: var(--sec); text-transform: uppercase; letter-spacing: 0.5px; margin: 18px 0 8px; }
+  .licao {
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card); border-radius: 12px; padding: 14px; margin-bottom: 10px;
+  }
+  .licao.bloqueada { opacity: 0.45; }
+  .licao-bolha {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 16px;
+    background: #22302a; color: var(--sec);
+  }
+  .licao-bolha.feita { background: var(--verde2); color: #fff; }
+  .licao-info { flex: 1; }
+  .licao-info b { display: block; font-size: 14px; }
+  .licao-info span { font-size: 12px; color: var(--sec); }
+  .licao-seta { color: var(--sec); font-size: 18px; }
+
+  /* ---- Tela de aula (guiada) ---- */
+  #aula { display: none; height: 100%; flex-direction: column; }
+  header.aula-header { padding: 16px 20px 10px; display: flex; align-items: center; gap: 10px; }
+  .btn-fechar { background: none; border: none; color: var(--sec); font-size: 22px; padding: 0 6px; }
+  .progress-wrap { flex: 1; background: #22302a; border-radius: 20px; height: 8px; overflow: hidden; }
+  .progress-bar { background: var(--verde2); height: 100%; width: 0%; transition: width 0.4s; }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
+  .tela { max-width: 480px; width: 100%; text-align: center; animation: fadein 0.3s; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .tela h1 { font-size: 21px; margin-bottom: 10px; }
+  .tela p { font-size: 15px; color: var(--sec); line-height: 1.5; }
+  .frase-grande {
+    background: var(--card); border-radius: 14px; padding: 22px 18px;
+    font-size: 18px; font-style: italic; margin: 16px 0; line-height: 1.4;
+  }
+  .trad-reveal { margin-top: 12px; font-size: 13px; color: var(--sec); font-style: normal; cursor: pointer; text-decoration: underline; }
+  .trad-texto { margin-top: 8px; font-size: 14px; display: none; }
+  .trad-texto.show { display: block; }
+  footer.aula-footer { padding: 14px 20px 22px; }
+  .btn { width: 100%; background: var(--verde2); color: #fff; border: none; padding: 16px; border-radius: 12px; font-size: 16px; font-weight: 600; }
+  .btn-voltar { background: none; color: var(--sec); font-size: 13px; border: none; padding: 10px; width: 100%; margin-top: 4px; }
+  .emoji-grande { font-size: 44px; margin-bottom: 8px; }
+  .lista-check { text-align: left; font-size: 14px; margin: 14px 0; padding-left: 0; list-style: none; }
+  .lista-check li { padding: 7px 0 7px 26px; position: relative; }
+  .lista-check li:before { content: "→"; position: absolute; left: 0; color: var(--verde2); }
+  table.vocab { width: 100%; border-collapse: collapse; font-size: 14px; margin: 14px 0; text-align: left; }
+  table.vocab td { padding: 8px 6px; border-bottom: 1px solid #243229; }
+  table.vocab td:first-child { color: var(--texto); font-style: italic; }
+  table.vocab td:last-child { color: var(--sec); }
+</style>
+</head>
+<body>
+
+<!-- ============ SELEÇÃO DE PERFIL ============ -->
+<div id="selecaoPerfil" style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:24px; text-align:center;">
+  <div style="font-size:44px; margin-bottom:10px;">🇪🇸</div>
+  <h1 style="font-size:20px; margin-bottom:6px;">Español para Reuniones</h1>
+  <p style="color:var(--sec); font-size:14px; margin-bottom:28px;">Quem vai treinar agora?</p>
+  <button class="btn" style="margin-bottom:12px;" onclick="escolherPerfil('edson')">Edson</button>
+  <button class="btn" style="background:#3a2a5c;" onclick="escolherPerfil('sandra')">Sandra</button>
+</div>
+
+<!-- ============ HOME: MENU DO CURSO ============ -->
+<div id="home" style="display:none;">
+  <div class="home-header">
+    <div class="kicker" id="kickerPerfil">Terra Bonita · Uso interno</div>
+    <h1>Español para Reuniones</h1>
+    <p>De "entendo mas travo" até conduzir uma reunião de investimento sem parar.</p>
+  </div>
+  <div class="home-body" id="homeBody"></div>
+  <div style="text-align:center; padding: 4px 0 18px;">
+    <button onclick="trocarPerfil()" style="background:none; border:none; color:var(--sec); font-size:12px; text-decoration:underline;">trocar de pessoa</button>
+  </div>
+</div>
+
+<!-- ============ AULA GUIADA ============ -->
+<div id="aula">
+  <header class="aula-header">
+    <button class="btn-fechar" onclick="fecharAula()">✕</button>
+    <div class="progress-wrap"><div class="progress-bar" id="barra"></div></div>
+  </header>
+  <main><div class="tela" id="tela"></div></main>
+  <footer class="aula-footer">
+    <button class="btn" id="btnAvancar" onclick="avancar()">Começar</button>
+    <button class="btn-voltar" id="btnVoltar" onclick="voltar()" style="display:none">← voltar</button>
+  </footer>
+</div>
+
+<script>
+/* ===================== DADOS DO CURSO ===================== */
+const MODULOS = [
+  {
+    nome: "Módulo 1 — Destravar a fala",
+    licoes: [
+      { id: "m1a1", titulo: "Aula 1 — O gatilho", desc: "Pensar em espanhol antes de falar" },
+    ]
+  },
+  {
+    nome: "Módulo 2 — Vocabulário Terra Bonita",
+    licoes: [
+      { id: "m2a1", titulo: "Aula 2 — Se apresentar", desc: "Quem você é, o que a empresa faz" },
+    ]
+  },
+  {
+    nome: "Módulo 3 — Objeção e negociação",
+    licoes: [
+      { id: "m3a1", titulo: "Aula 3", desc: "Em breve", bloqueada: true },
+    ]
+  },
+  {
+    nome: "Módulo 4 — Reunião completa",
+    licoes: [
+      { id: "m4a1", titulo: "Aula 4", desc: "Em breve", bloqueada: true },
+    ]
+  },
+];
+
+const AULAS = {
+  m1a1: [
+    { html: `<div class="emoji-grande">🇪🇸</div><h1>Aula 1 — Destravar a fala</h1><p>Hoje não vamos aprender palavra nova nenhuma. Só uma coisa: treinar seu cérebro a começar a frase direto em espanhol, sem passar pelo português primeiro.</p>` },
+    { html: `<h1>Por que essa aula existe</h1><p>No seu teste, você entendeu tudo certo — mas quando foi falar, saiu quase tudo em português. Isso é normal: entender é mais fácil que falar. Essa aula treina só a parte de falar.</p>` },
+    { html: `<h1>A regra de hoje</h1><div class="frase-grande">Pense a frase inteira ANTES de abrir a boca.</div><p>Nunca comece a falar e vá traduzindo palavra por palavra no meio do caminho.</p>` },
+    { html: `<h1>Frase 1 de 5</h1><p>Leia em voz alta, devagar:</p><div class="frase-grande">Hoy me desperté temprano.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Hoje acordei cedo.</div></div>` },
+    { html: `<h1>Frase 2 de 5</h1><div class="frase-grande">Voy a trabajar con clientes de Chile.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Vou trabalhar com clientes do Chile.</div></div><p>Troque "Chile" pelo país do seu próximo lead de verdade.</p>` },
+    { html: `<h1>Frase 3 de 5</h1><div class="frase-grande">Tengo una reunión mañana por la tarde.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Tenho uma reunião amanhã à tarde.</div></div>` },
+    { html: `<h1>Frase 4 de 5</h1><div class="frase-grande">Me gusta mi trabajo porque ayudo a las personas a invertir bien.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Gosto do meu trabalho porque ajudo as pessoas a investir bem.</div></div>` },
+    { html: `<h1>Frase 5 de 5</h1><div class="frase-grande">Espero que usted tenga un buen día.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Espero que você tenha um bom dia.</div></div>` },
+    { html: `<h1>Agora sem ajuda</h1><p>Grave 2 minutos no celular, só em espanhol, sobre seu dia de hoje. Se cair no português no meio de uma frase — <b>pare e recomeça a frase inteira</b>.</p><ul class="lista-check"><li>Fale devagar, sem pressa</li><li>Pense a frase antes de falar</li><li>Se travar, recomeça a frase toda</li></ul>` },
+    { html: `<div class="emoji-grande">✅</div><h1>Aula 1 concluída</h1><p>Repita essa aula de novo amanhã, com frases novas sobre seu dia. Em 5-6 dias o gatilho começa a ficar automático.</p>` },
+  ],
+  m2a1: [
+    { html: `<div class="emoji-grande">🏢</div><h1>Aula 2 — Se apresentar</h1><p>Agora que já treinou o gatilho de falar em espanhol, vamos usar as frases REAIS que a Terra Bonita já manda pros seus leads — aprovadas por você mesmo.</p>` },
+    { html: `<h1>Frase real 1</h1><p>É assim que o sistema se apresenta hoje. Leia em voz alta:</p><div class="frase-grande">Soy Edson Junior, propietario de Terra Bonita Inversiones Inmobiliarias.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Sou Edson Junior, proprietário da Terra Bonita Inversiones Inmobiliarias.</div></div>` },
+    { html: `<h1>Frase real 2</h1><div class="frase-grande">Una inmobiliaria especializada en inversiones en la costa de Santa Catarina, Brasil.<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Uma imobiliária especializada em investimentos no litoral de Santa Catarina, Brasil.</div></div><p>Emende com a frase anterior, as duas juntas, sem pausa longa.</p>` },
+    { html: `<h1>Vocabulário desta aula</h1><table class="vocab"><tr><td>valorización</td><td>valorização</td></tr><tr><td>alquiler</td><td>aluguel</td></tr><tr><td>ubicación</td><td>localização</td></tr><tr><td>inversión</td><td>investimento</td></tr></table><p>Fala cada palavra em voz alta, 2x.</p>` },
+    { html: `<h1>Pergunta de qualificação real</h1><div class="frase-grande">¿Su interés en invertir en Brasil sería para generar ingresos por alquiler, aprovechar la valorización, o ambas cosas?<div class="trad-reveal" onclick="revelar(this)">ver tradução</div><div class="trad-texto">Seu interesse seria gerar renda com aluguel, valorização, ou as duas coisas?</div></div>` },
+    { html: `<h1>Agora sem ajuda</h1><p>Grave 1 minuto se apresentando pra um lead imaginário, usando as frases que acabou de treinar — pode misturar com suas próprias palavras.</p>` },
+    { html: `<div class="emoji-grande">✅</div><h1>Aula 2 concluída</h1><p>Você já treinou a apresentação real que seus leads recebem. Na próxima aula entramos em objeção de preço.</p>` },
+  ],
+};
+
+/* ===================== LÓGICA ===================== */
+const NOMES_PERFIL = { edson: "Edson", sandra: "Sandra" };
+
+function perfilAtivo() {
+  return localStorage.getItem("perfil_ativo");
+}
+
+function escolherPerfil(id) {
+  localStorage.setItem("perfil_ativo", id);
+  document.getElementById("selecaoPerfil").style.display = "none";
+  document.getElementById("home").style.display = "flex";
+  document.getElementById("kickerPerfil").textContent = "Terra Bonita · " + NOMES_PERFIL[id];
+  renderHome();
+}
+
+function trocarPerfil() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("selecaoPerfil").style.display = "flex";
+}
+
+// Progresso guardado por pessoa (chave prefixada), mesmo aparelho ou não -- cada perfil nunca
+// mistura o progresso do outro, mesmo se um dia usarem o mesmo celular.
+function chaveProgresso() {
+  return "aulas_concluidas_" + (perfilAtivo() || "default");
+}
+function concluidas() {
+  return JSON.parse(localStorage.getItem(chaveProgresso()) || "[]");
+}
+function marcarConcluida(id) {
+  const c = concluidas();
+  if (!c.includes(id)) { c.push(id); localStorage.setItem(chaveProgresso(), JSON.stringify(c)); }
+}
+
+function renderHome() {
+  const feitas = concluidas();
+  let html = "";
+  MODULOS.forEach(mod => {
+    html += `<div class="modulo-titulo">${mod.nome}</div>`;
+    mod.licoes.forEach(l => {
+      const feita = feitas.includes(l.id);
+      const bloqueada = l.bloqueada && !feita;
+      html += `
+        <div class="licao ${bloqueada ? 'bloqueada' : ''}" ${bloqueada ? '' : `onclick="abrirAula('${l.id}')"`}>
+          <div class="licao-bolha ${feita ? 'feita' : ''}">${feita ? '✓' : (bloqueada ? '🔒' : '▶')}</div>
+          <div class="licao-info"><b>${l.titulo}</b><span>${l.desc}</span></div>
+          <div class="licao-seta">${bloqueada ? '' : '›'}</div>
+        </div>`;
+    });
+  });
+  document.getElementById("homeBody").innerHTML = html;
+}
+
+let aulaAtualId = null;
+let passoAtual = 0;
+
+function abrirAula(id) {
+  if (!AULAS[id]) return;
+  aulaAtualId = id;
+  passoAtual = 0;
+  document.getElementById("home").style.display = "none";
+  document.getElementById("aula").style.display = "flex";
+  renderPasso();
+}
+
+function fecharAula() {
+  document.getElementById("aula").style.display = "none";
+  document.getElementById("home").style.display = "flex";
+  renderHome();
+}
+
+function renderPasso() {
+  const passos = AULAS[aulaAtualId];
+  const p = passos[passoAtual];
+  document.getElementById("tela").innerHTML = p.html;
+  document.getElementById("barra").style.width = (passoAtual / (passos.length - 1) * 100) + "%";
+  document.getElementById("btnVoltar").style.display = passoAtual === 0 ? "none" : "block";
+  document.getElementById("btnAvancar").textContent =
+    passoAtual === 0 ? "Começar" : passoAtual === passos.length - 1 ? "Terminar aula" : "Próximo";
+  window.scrollTo(0,0);
+}
+
+function avancar() {
+  const passos = AULAS[aulaAtualId];
+  if (passoAtual < passos.length - 1) {
+    passoAtual++;
+    renderPasso();
+  } else {
+    marcarConcluida(aulaAtualId);
+    fecharAula();
+  }
+}
+
+function voltar() {
+  if (passoAtual > 0) { passoAtual--; renderPasso(); }
+}
+
+function revelar(el) {
+  el.nextElementSibling.classList.toggle("show");
+  el.textContent = el.nextElementSibling.classList.contains("show") ? "esconder tradução" : "ver tradução";
+}
+
+// Se já escolheu quem é antes, pula a seleção e vai direto pro menu.
+const perfilJaEscolhido = perfilAtivo();
+if (perfilJaEscolhido) {
+  document.getElementById("selecaoPerfil").style.display = "none";
+  document.getElementById("home").style.display = "flex";
+  document.getElementById("kickerPerfil").textContent = "Terra Bonita · " + (NOMES_PERFIL[perfilJaEscolhido] || perfilJaEscolhido);
+  renderHome();
+}
+</script>
+
+</body>
+</html>
